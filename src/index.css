@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: #00A651;
+    --color-primary-dark: #009148;
+    --color-primary-light: #00bf5d;
+    --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    --gradient-text: linear-gradient(135deg, #00A651 0%, #009148 100%);
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+  
+  body {
+    @apply bg-[#f8f9fa] text-gray-900 antialiased;
+    font-family: var(--font-family);
+  }
+
+  /* Improve touch targets on mobile */
+  @media (max-width: 640px) {
+    button, 
+    [role="button"] {
+      @apply min-h-[40px];
+    }
+    
+    input[type="checkbox"] + label {
+      @apply min-h-[32px] min-w-[32px];
+    }
+
+    .input {
+      @apply px-4 py-3 text-sm;
+    }
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-full font-medium transition-all duration-200 
+           disabled:opacity-50 disabled:cursor-not-allowed text-sm
+           hover:shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary hover:scale-[1.01]
+           active:scale-95;
+  }
+  
+  .btn-lg {
+    @apply px-6 sm:px-8 py-3.5 sm:py-4;
+  }
+  
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-dark text-white font-semibold;
+  }
+  
+  .btn-secondary {
+    @apply bg-white hover:bg-gray-50 text-gray-900 border-2 border-gray-200 font-semibold;
+  }
+  
+  .btn-danger {
+    @apply bg-red-500 hover:bg-red-600 text-white;
+  }
+  
+  .card {
+    @apply bg-white rounded-3xl shadow-sm border border-gray-100/50
+           transition-all duration-200 hover:shadow-lg hover:border-primary/20 hover:shadow-primary/5;
+  }
+  
+  .input {
+    @apply w-full px-5 py-3.5 rounded-2xl border-2 border-gray-200 
+           focus:ring-2 focus:ring-offset-2 focus:ring-primary 
+           focus:border-primary outline-none transition-colors duration-200
+           text-base font-medium;
+  }
+
+  /* Improved item list styling */
+  .item-list {
+    @apply divide-y divide-gray-100;
+  }
+
+  .item {
+    @apply grid grid-cols-[1fr,auto,auto] gap-4 py-3 items-center;
+  }
+
+  .item-name {
+    @apply font-medium truncate;
+  }
+
+  .item-quantity {
+    @apply text-gray-500 whitespace-nowrap;
+  }
+
+  .item-price {
+    @apply font-medium text-primary whitespace-nowrap;
+  }
+
+  .gradient-text {
+    background: var(--gradient-text);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-size: 200% 100%;
+    animation: gradient-shift 8s ease infinite;
+    padding-bottom: 0.1em;
+    display: inline-block;
+  }
+}
+
+@keyframes progress-width {
+  0% { width: 0%; }
+  20% { width: 60%; }
+  40% { width: 75%; }
+  60% { width: 85%; }
+  80% { width: 90%; }
+  100% { width: 95%; }
+}
+
+/* Add gradient text animation */
+.gradient-text {
+  background: var(--gradient-text);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-size: 200% 100%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Add hover effect for mode selection cards */
+.mode-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.mode-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 166, 81, 0.1);
+}
+
+.mode-card.border-primary::after {
+  content: '✓ Selected';
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-primary);
+  background: rgba(0, 166, 81, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+}
+
+.mode-card:hover .mode-icon {
+  transform: scale(1.1);
+  background-color: var(--color-primary);
+}
+
+.mode-card:hover .mode-icon svg {
+  color: white;
+}
+
+.mode-card .mode-label {
+  transition: all 0.2s ease;
+  border-radius: 12px;
+  padding: 2px 8px;
+}
+
+.mode-card:hover .mode-label {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+/* Remove default disclosure triangle from details/summary */
+details summary {
+  list-style: none; /* Removes the default triangle */
+}
+
+details summary::-webkit-details-marker {
+  display: none; /* Hides the marker in WebKit browsers */
+}
