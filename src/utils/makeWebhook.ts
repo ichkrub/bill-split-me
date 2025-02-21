@@ -220,7 +220,9 @@ async function sendToMakeWebhook(base64Image: string, mimeType: string, imageUrl
     : '';
 
   try {
-    const response = await fetch('https://hook.eu2.make.com/1orcspo4ih1ftb4tx4nmsay8g6w174d0', {
+    const webhookUrl = import.meta.env.VITE_MAKE_WEBHOOK_URL;
+    
+    const response = await fetch(webhookUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

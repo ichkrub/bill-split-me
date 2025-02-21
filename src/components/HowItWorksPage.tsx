@@ -90,7 +90,7 @@ export function HowItWorksPage() {
           </div>
         </section>
 
-        {/* New: Use Cases */}
+        {/* Use Cases */}
         <section className="py-16 bg-white">
           <div className="max-w-screen-lg mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Perfect for Any Group Expense</h2>
@@ -99,25 +99,40 @@ export function HowItWorksPage() {
                 {
                   icon: <Home className="w-6 h-6 text-primary" />,
                   title: "🏡 Splitting Rent & Utilities",
-                  description: "Fairly divide rent, electricity, and internet bills with roommates."
+                  description: "Fairly divide rent, electricity, and internet bills with roommates. No more arguments over who owes what."
                 },
                 {
                   icon: <Plane className="w-6 h-6 text-primary" />,
                   title: "✈️ Group Travel Expenses",
-                  description: "Easily split shared vacation costs like hotels, transportation, and meals."
+                  description: "Easily split shared vacation costs like hotels, transportation, and meals. Enjoy your trip without worrying about expenses."
                 },
                 {
                   icon: <ShoppingBag className="w-6 h-6 text-primary" />,
                   title: "🍽️ Dining & Restaurant Bills",
-                  description: "No more splitting by total—pay exactly what you owe."
+                  description: "No more splitting by total—pay exactly what you owe. Perfect for group dinners and outings."
+                },
+                {
+                  icon: <CreditCard className="w-6 h-6 text-primary" />,
+                  title: "💳 Shared Subscriptions",
+                  description: "Divide the cost of shared subscriptions like Netflix, Spotify, and more. Keep everyone happy and entertained."
+                },
+                {
+                  icon: <Globe className="w-6 h-6 text-primary" />,
+                  title: "🌍 International Expenses",
+                  description: "Handle expenses in different currencies with ease. Perfect for international trips and collaborations."
+                },
+                {
+                  icon: <CheckCircle className="w-6 h-6 text-primary" />,
+                  title: "✅ Event Planning",
+                  description: "Split costs for events like weddings, parties, and reunions. Ensure everyone contributes their fair share."
                 }
               ].map((useCase, index) => (
-                <div key={index} className="card p-6 text-center shadow-md">
+                <div key={index} className="card p-6 text-center shadow-md hover:shadow-lg transition-all">
                   <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
                     {useCase.icon}
                   </div>
                   <h3 className="text-xl font-semibold mt-4">{useCase.title}</h3>
-                  <p className="text-gray-600">{useCase.description}</p>
+                  <p className="text-gray-600 mt-2">{useCase.description}</p>
                 </div>
               ))}
             </div>
