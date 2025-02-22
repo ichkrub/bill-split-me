@@ -3,9 +3,9 @@ import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App.tsx';
-import { PrivacyPolicy } from './components/PrivacyPolicy.tsx';
-import { HowItWorksPage } from './components/HowItWorksPage.tsx';
-import { ParticipantView } from './components/ParticipantView.tsx';
+import { PrivacyPolicy } from './pages/PrivacyPolicy.tsx';
+import { HowItWorksPage } from './pages/HowItWorksPage.tsx';
+import { ParticipantView } from './pages/ParticipantView.tsx';
 import './index.css';
 
 const router = createBrowserRouter([
