@@ -6,6 +6,8 @@ import App from './App.tsx';
 import { PrivacyPolicy } from './pages/PrivacyPolicy.tsx';
 import { HowItWorksPage } from './pages/HowItWorksPage.tsx';
 import { ParticipantView } from './pages/ParticipantView.tsx';
+import BlogPage from './pages/blog/index.tsx';  // Updated import path
+import BlogPostPage from './pages/blog/[slug].tsx';  // Updated import path
 import './index.css';
 
 const router = createBrowserRouter([
@@ -29,7 +31,15 @@ const router = createBrowserRouter([
   {
     path: '*',
     element: <ParticipantView />
-  }
+  },
+  {
+    path: '/blog',
+    element: <BlogPage />,
+  },
+  {
+    path: '/blog/:slug',
+    element: <BlogPostPage />,
+  },
 ]);
 
 createRoot(document.getElementById('root')!).render(

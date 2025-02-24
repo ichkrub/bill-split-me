@@ -1,13 +1,38 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
+// Add debug logging
+console.log('Supabase URL:', supabaseUrl);
+console.log('Supabase Key exists:', !!supabaseKey);
+
+if (!supabaseUrl || !supabaseKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Test connection
+export async function testSupabaseConnection() {
+  try {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('count')
+      .single();
+
+    if (error) {
+      console.error('Supabase connection error:', error);
+      return false;
+    }
+
+    console.log('Supabase connection successful:', data);
+    return true;
+  } catch (error) {
+    console.error('Supabase connection test failed:', error);
+    return false;
+  }
+}
 
 export async function signUpTemporaryUser() {
   // Generate a random email and password

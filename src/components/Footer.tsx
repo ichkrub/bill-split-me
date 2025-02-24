@@ -10,6 +10,9 @@ const Footer: React.FC = () => {
             © 2025 <a href="https://www.smbee.me" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">SMBee</a>. All Rights Reserved.
           </p>
           <div className="flex items-center gap-4">
+            <Link to="/blog" className="text-sm text-gray-500 hover:text-primary hover:underline">
+              Blog
+            </Link>
             <Link to="/how-it-works" className="text-sm text-gray-500 hover:text-primary hover:underline">
               How It Works
             </Link>
