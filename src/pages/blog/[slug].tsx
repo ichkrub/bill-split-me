@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Layout from '../../components/Layout';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { Helmet } from 'react-helmet-async'; // ✅ Import Helmet for SEO
 
@@ -117,6 +117,21 @@ export default function BlogPostPage() {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
         )}
+
+        {/* ✅ Add "Try BillSplit Me Now" Banner */}
+        <div className="mt-12 bg-primary/10 py-8 px-6 rounded-lg text-center">
+          <h2 className="text-2xl font-bold mb-4">Ready to Split Bills Easily?</h2>
+          <p className="text-gray-700 mb-6">
+            Try BillSplit Me now and make splitting bills with friends a breeze!
+          </p>
+          <Link 
+            to="/" 
+            className="btn btn-primary text-lg py-3 px-6 inline-flex items-center gap-2"
+          >
+            Try BillSplit Me Now
+            <ArrowRight size={20} />
+          </Link>
+        </div>
       </div>
     </Layout>
   );

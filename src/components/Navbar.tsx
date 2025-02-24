@@ -9,8 +9,8 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ buttonType, handleStartOver }) => {
   return (
-    <nav className="bg-white border-b border-gray-100 sticky top-0 z-20">
-      <div className="max-w-screen-lg mx-auto px-4 py-3">
+    <nav className="bg-white border-b border-gray-100 sticky top-0 z-20 w-full">
+      <div className="w-full max-w-6xl mx-auto px-4 py-3"> {/* Updated to max-w-6xl */}
         <div className="flex items-center justify-between">
           {/* ✅ Fix Missing Icon */}
           <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
