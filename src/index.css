@@ -47,7 +47,7 @@
   }
   
   .btn-primary {
-    @apply bg-primary hover:bg-primary-dark text-white font-semibold;
+    @apply bg-primary hover:bg-primary-dark text-white border-2 border-primary font-semibold;
   }
   
   .btn-secondary {

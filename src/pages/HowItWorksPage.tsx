@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Receipt, ArrowRight, Upload, Users, Calculator, Share2, CreditCard, Globe, CheckCircle, Home, Plane, ShoppingBag, ChevronDown } from 'lucide-react';
+import Layout from '../components/Layout';
 
 export function HowItWorksPage() {
   React.useEffect(() => {
@@ -9,7 +10,7 @@ export function HowItWorksPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <Layout buttonType="split-now"> {/* ✅ Pass buttonType to show Navbar */}
       <Helmet>
         <title>How to Split Bills Fairly with BillSplit.me - No More Awkward Math</title>
         <meta name="description" content="Need to split a bill fast? BillSplit.me lets you upload receipts, assign items, and share fair cost breakdowns, including tax & tip. No sign-up needed!" />
@@ -17,22 +18,6 @@ export function HowItWorksPage() {
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://www.billsplit.me/how-it-works" />
       </Helmet>
-
-      {/* Navbar */}
-      <nav className="bg-white border-b border-gray-100 sticky top-0 z-10">
-        <div className="max-w-screen-lg mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <Receipt className="h-6 w-6 text-primary" />
-              <h1 className="text-xl font-semibold">BillSplit Me</h1>
-            </Link>
-            <Link to="/" className="btn btn-primary flex items-center gap-1">
-              <span>Start Splitting</span>
-              <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
-      </nav>
 
       <main className="flex-1">
         {/* Hero Section */}
@@ -183,24 +168,6 @@ export function HowItWorksPage() {
           </div>
         </section>
       </main>
-      
-      <footer className="bg-white border-t border-gray-100">
-        <div className="max-w-screen-lg mx-auto px-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between py-4 gap-2">
-            <p className="text-gray-500 text-sm">
-              © 2025 <a href="https://www.smbee.me" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">SMBee</a>. All Rights Reserved.
-            </p>
-            <div className="flex items-center gap-4">
-              <Link to="/how-it-works" className="text-sm text-gray-500 hover:text-primary hover:underline">
-                How It Works
-              </Link>
-              <Link to="/privacy-policy" className="text-sm text-gray-500 hover:text-primary hover:underline">
-                Privacy Policy
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </Layout>
   );
 }

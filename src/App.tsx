@@ -1,4 +1,5 @@
 import React from 'react';
+import Layout from './components/Layout';
 import { BillSplitIcon } from './components/BillSplitIcon';
 import { RotateCcw, Users, UserCheck, Upload, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -296,225 +297,190 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Sticky Navbar */}
-      <nav className="bg-white border-b border-gray-100 sticky top-0 z-20">
-        <div className="max-w-screen-lg mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <BillSplitIcon className="h-6 w-6 text-primary" />
-              <h1 className="text-xl font-semibold">BillSplit Me</h1>
-            </Link>
-            <button
-              onClick={handleStartOver}
-              className="btn btn-secondary flex items-center gap-1"
-            >
-              <RotateCcw size={16} />
-              <span>Start Over</span>
-            </button>
+    <Layout buttonType="start-over" handleStartOver={handleStartOver}> {/* ✅ Pass function */}
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        {/* Header Text */}
+        <header className="relative bg-gradient-to-b from-white to-gray-50 border-b border-gray-100 overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(0,166,81,0.05),transparent)] pointer-events-none"></div>
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMSIgZmlsbD0iIzAwQTY1MSIgZmlsbC1vcGFjaXR5PSIwLjAzIi8+PC9zdmc+')] opacity-50 pointer-events-none"></div>
+          <div className="max-w-screen-lg mx-auto px-4 py-12 sm:py-20">
+            <div className="text-center">
+              <h1 className="text-[2.5rem] sm:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-[1.15] sm:leading-tight gradient-text">
+                Split Bills Easily with Friends
+              </h1>
+              <h2 className="text-base sm:text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto font-medium leading-snug sm:leading-relaxed">
+                Upload your receipt, assign items, and let everyone pay their fair share—perfect for dining, group trips, and shared expenses.
+              </h2>
+            </div>
           </div>
-        </div>
-      </nav>
+        </header>
 
-      {/* Header Text */}
-      <header className="relative bg-gradient-to-b from-white to-gray-50 border-b border-gray-100 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(0,166,81,0.05),transparent)] pointer-events-none"></div>
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMSIgZmlsbD0iIzAwQTY1MSIgZmlsbC1vcGFjaXR5PSIwLjAzIi8+PC9zdmc+')] opacity-50 pointer-events-none"></div>
-        <div className="max-w-screen-lg mx-auto px-4 py-12 sm:py-20">
-          <div className="text-center">
-            <h1 className="text-[2.5rem] sm:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-[1.15] sm:leading-tight gradient-text">
-              Split Bills Easily with Friends
-            </h1>
-            <h2 className="text-base sm:text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto font-medium leading-snug sm:leading-relaxed">
-              Upload your receipt, assign items, and let everyone pay their fair share—perfect for dining, group trips, and shared expenses.
-            </h2>
-          </div>
-        </div>
-      </header>
-
-      <main className="flex-1 max-w-screen-lg mx-auto px-4 py-8">
-        <section id="upload-receipt" aria-label="Upload Receipt">
-          <div className="mb-6">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
-                1
+        <main className="flex-1 max-w-screen-lg mx-auto px-4 py-8">
+          <section id="upload-receipt" aria-label="Upload Receipt">
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
+                  1
+                </div>
+                <h2 className="text-xl font-semibold">Add Your Bill</h2>
               </div>
-              <h2 className="text-xl font-semibold">Add Your Bill</h2>
+              <p className="text-gray-600 ml-10">
+                Upload a receipt or add items manually to get started
+              </p>
             </div>
-            <p className="text-gray-600 ml-10">
-              Upload a receipt or add items manually to get started
-            </p>
-          </div>
-          <ReceiptUpload 
-            ref={receiptUploadRef}
-            onImageCapture={handleImageCapture} 
-            onItemsExtracted={handleExtractedItems}
-            onBillInfoExtracted={(info) => {
-              setBillInfo(prev => ({ ...prev, ...info }));
-            }}
-            onAdditionalChargesExtracted={handleAdditionalChargesExtracted}
-          />
-        </section>
+            <ReceiptUpload 
+              ref={receiptUploadRef}
+              onImageCapture={handleImageCapture} 
+              onItemsExtracted={handleExtractedItems}
+              onBillInfoExtracted={(info) => {
+                setBillInfo(prev => ({ ...prev, ...info }));
+              }}
+              onAdditionalChargesExtracted={handleAdditionalChargesExtracted}
+            />
+          </section>
 
-        {/* Two-column layout for desktop */}
-        <div className="mt-12 relative">
-          <div className="space-y-8">
-            {/* Forms */}
-            <div>
-              <section id="bill-form" aria-label="Bill Details">
-                <div className="mb-8">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
-                      2
+          {/* Two-column layout for desktop */}
+          <div className="mt-12 relative">
+            <div className="space-y-8">
+              {/* Forms */}
+              <div>
+                <section id="bill-form" aria-label="Bill Details">
+                  <div className="mb-8">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
+                        2
+                      </div>
+                      <h2 className="text-xl font-semibold">Add People</h2>
                     </div>
-                    <h2 className="text-xl font-semibold">Add People</h2>
+                    <p className="text-gray-600 ml-10">
+                      Add people who will be splitting the bill
+                    </p>
                   </div>
-                  <p className="text-gray-600 ml-10">
-                    Add people who will be splitting the bill
-                  </p>
-                </div>
-                <BillForm
-                  items={items}
-                  diners={diners}
-                  onAddItem={handleAddItem}
-                  onRemoveItem={handleRemoveItem}
-                  onUpdateItem={handleUpdateItem}
-                  onAddDiner={handleAddDiner}
-                  onRemoveDiner={handleRemoveDiner}
-                  selectedCurrency={billInfo.currency}
-                  onCurrencyChange={handleCurrencyChange}
-                  currencySymbol={getCurrencySymbol(billInfo.currency)}
-                />
-              </section>
+                  <BillForm
+                    items={items}
+                    diners={diners}
+                    onAddItem={handleAddItem}
+                    onRemoveItem={handleRemoveItem}
+                    onUpdateItem={handleUpdateItem}
+                    onAddDiner={handleAddDiner}
+                    onRemoveDiner={handleRemoveDiner}
+                    selectedCurrency={billInfo.currency}
+                    onCurrencyChange={handleCurrencyChange}
+                    currencySymbol={getCurrencySymbol(billInfo.currency)}
+                  />
+                </section>
 
-              <section id="additional-charges" aria-label="Additional Charges" className="mt-16">
-                <div className="mb-8">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
-                      3
+                <section id="additional-charges" aria-label="Additional Charges" className="mt-16">
+                  <div className="mb-8">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
+                        3
+                      </div>
+                      <h2 className="text-xl font-semibold">Additional Charges</h2>
                     </div>
-                    <h2 className="text-xl font-semibold">Additional Charges</h2>
+                    <p className="text-gray-600 ml-10">
+                      Add tax, service charge, or other additional charges
+                    </p>
                   </div>
-                  <p className="text-gray-600 ml-10">
-                    Add tax, service charge, or other additional charges
-                  </p>
-                </div>
-                <AdditionalCharges
-                  charges={additionalCharges}
-                  onUpdateCharge={handleUpdateCharge}
-                  currencySymbol={getCurrencySymbol(billInfo.currency)}
-                />
-              </section>
+                  <AdditionalCharges
+                    charges={additionalCharges}
+                    onUpdateCharge={handleUpdateCharge}
+                    currencySymbol={getCurrencySymbol(billInfo.currency)}
+                  />
+                </section>
 
-              <section id="bill-info" aria-label="Bill Information" className="mt-16">
-                <div className="mb-8">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
-                      4
+                <section id="bill-info" aria-label="Bill Information" className="mt-16">
+                  <div className="mb-8">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
+                        4
+                      </div>
+                      <h2 className="text-xl font-semibold">Bill Information</h2>
                     </div>
-                    <h2 className="text-xl font-semibold">Bill Information</h2>
+                    <p className="text-gray-600 ml-10">
+                      Add restaurant details and date for reference
+                    </p>
                   </div>
-                  <p className="text-gray-600 ml-10">
-                    Add restaurant details and date for reference
-                  </p>
-                </div>
-                <div className="card p-6">
-                  <div className="grid gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Restaurant Name
-                      </label>
-                      <input
-                        type="text"
-                        value={billInfo.restaurantName}
-                        onChange={(e) => setBillInfo({
-                          ...billInfo,
-                          restaurantName: e.target.value,
-                        })}
-                        placeholder="Enter restaurant name"
-                        className="input"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Date
-                      </label>
-                      <input
-                        type="date"
-                        value={billInfo.date ? new Date(billInfo.date.getTime() - billInfo.date.getTimezoneOffset() * 60000).toISOString().split('T')[0] : ''}
-                        onChange={(e) => {
-                          const selectedDate = e.target.value 
-                            ? new Date(new Date(e.target.value).getTime() + new Date().getTimezoneOffset() * 60000)
-                            : null;
-                          setBillInfo({
+                  <div className="card p-6">
+                    <div className="grid gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Restaurant Name
+                        </label>
+                        <input
+                          type="text"
+                          value={billInfo.restaurantName}
+                          onChange={(e) => setBillInfo({
                             ...billInfo,
-                            date: selectedDate,
-                          });
-                        }}
-                        className="input"
-                      />
+                            restaurantName: e.target.value,
+                          })}
+                          placeholder="Enter restaurant name"
+                          className="input"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Date
+                        </label>
+                        <input
+                          type="date"
+                          value={billInfo.date ? new Date(billInfo.date.getTime() - billInfo.date.getTimezoneOffset() * 60000).toISOString().split('T')[0] : ''}
+                          onChange={(e) => {
+                            const selectedDate = e.target.value 
+                              ? new Date(new Date(e.target.value).getTime() + new Date().getTimezoneOffset() * 60000)
+                              : null;
+                            setBillInfo({
+                              ...billInfo,
+                              date: selectedDate,
+                            });
+                          }}
+                          className="input"
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </section>
-            </div>
-            
-            {/* Summary */}
-            <div>
-              <section id="bill-summary" aria-label="Bill Summary">
-                <div className="mb-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
-                      5
+                </section>
+              </div>
+              
+              {/* Summary */}
+              <div>
+                <section id="bill-summary" aria-label="Bill Summary">
+                  <div className="mb-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
+                        5
+                      </div>
+                      <h2 className="text-xl font-semibold">Review & Share</h2>
                     </div>
-                    <h2 className="text-xl font-semibold">Review & Share</h2>
+                    <p className="text-gray-600 ml-10">
+                      Review the split and download the summary
+                    </p>
                   </div>
-                  <p className="text-gray-600 ml-10">
-                    Review the split and download the summary
-                  </p>
-                </div>
-                <BillSummary
-                  ref={billSummaryRef}
-                  dinerSummaries={calculateDinerSummaries()}
-                  billInfo={billInfo}
-                  currencySymbol={getCurrencySymbol(billInfo.currency)}
-                  onShare={handleShareBill}
-                />
-              </section>
+                  <BillSummary
+                    ref={billSummaryRef}
+                    dinerSummaries={calculateDinerSummaries()}
+                    billInfo={billInfo}
+                    currencySymbol={getCurrencySymbol(billInfo.currency)}
+                    onShare={handleShareBill}
+                  />
+                </section>
+              </div>
             </div>
           </div>
-        </div>
 
-        <section id="how-it-works" aria-label="How It Works" className="mt-8">
-          <HowItWorks />
-        </section>
-      </main>
+          <section id="how-it-works" aria-label="How It Works" className="mt-8">
+            <HowItWorks />
+          </section>
+        </main>
 
-      <footer className="bg-white border-t border-gray-100 mt-8">
-        <div className="max-w-screen-lg mx-auto px-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between py-4 gap-2">
-            <p className="text-gray-500 text-sm">
-              © 2025 <a href="https://www.smbee.me" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">SMBee</a>. All Rights Reserved.
-            </p>
-            <div className="flex items-center gap-4">
-              <Link to="/how-it-works" className="text-sm text-gray-500 hover:text-primary hover:underline">
-                How It Works
-              </Link>
-              <Link to="/privacy-policy" className="text-sm text-gray-500 hover:text-primary hover:underline">
-                Privacy Policy
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
-
-      {showCookieConsent && (
-        <CookieConsent
-          onAccept={handleAcceptCookies}
-          onDecline={handleDeclineCookies}
-        />
-      )}
-    </div>
+        {showCookieConsent && (
+          <CookieConsent
+            onAccept={handleAcceptCookies}
+            onDecline={handleDeclineCookies}
+          />
+        )}
+      </div>
+    </Layout>
   );
 }
 
