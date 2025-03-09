@@ -1,5 +1,6 @@
 import React from 'react';
 import { Upload, Plus, Loader2, RotateCcw, X, Maximize2 } from 'lucide-react';
+import imageCompression from 'browser-image-compression';
 import { processReceiptImage } from '../utils/makeWebhook';
 import { BillInfo } from '../types';
 import { Link } from 'react-router-dom';
@@ -59,13 +60,27 @@ const ReceiptUpload = React.forwardRef<{ resetUpload: () => void }, ReceiptUploa
 
       setIsProcessing(true);
       setError(null);
-      setProcessingStep('Processing receipt...');
-      createPreview(file);
-      onImageCapture(file);
-      setLastFile(file);
+      setProcessingStep('Initializing...');
 
       try {
-        const result = await processReceiptImage(file);
+        // Compress the image
+        const options = {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 1024,
+          useWebWorker: true
+        };
+        const compressedFile = await imageCompression(file, options);
+
+        createPreview(compressedFile);
+        onImageCapture(compressedFile);
+        setLastFile(compressedFile);
+
+        // Update processing steps with delays
+        setTimeout(() => setProcessingStep('Processing image...'), 1000);
+        setTimeout(() => setProcessingStep('Extracting text...'), 2500);
+        setTimeout(() => setProcessingStep('Analyzing receipt...'), 4000);
+
+        const result = await processReceiptImage(compressedFile);
         
         onItemsExtracted(result.items);
         onBillInfoExtracted({
@@ -75,11 +90,15 @@ const ReceiptUpload = React.forwardRef<{ resetUpload: () => void }, ReceiptUploa
         });
         onAdditionalChargesExtracted(result.charges);
 
+        // Show success state
         setProcessingStep('Success!');
+        
+        // Delay the completion to match the animation
         setTimeout(() => {
           setProcessingStep('');
           setIsProcessing(false);
-        }, 1000);
+        }, 1500);
+
       } catch (error) {
         const errorMessage = error instanceof Error 
           ? error.message 
@@ -215,10 +234,10 @@ const ReceiptUpload = React.forwardRef<{ resetUpload: () => void }, ReceiptUploa
               {processingStep || 'Processing...'}
             </p>
             <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full bg-primary transition-all duration-300 ease-out"
+              <div className="h-full bg-primary transition-all duration-500 ease-out"
                    style={{
-                     width: processingStep === 'Success!' ? '100%' : '95%',
-                     animation: processingStep === 'Success!' ? 'none' : 'progress-width 3s cubic-bezier(0.4, 0, 0.2, 1) forwards'
+                     width: processingStep === 'Success!' ? '100%' : undefined,
+                     animation: processingStep === 'Success!' ? 'none' : 'progress-width 8s cubic-bezier(0.4, 0, 0.2, 1) forwards'
                    }} />
             </div>
           </div>

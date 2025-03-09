@@ -12,6 +12,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",
     "@techstark/opencv-js": "4.9.0-release.1",
+    "browser-image-compression": "^2.0.2",
     "heic2any": "^0.0.4",
     "html2canvas": "^1.4.1",
     "lucide-react": "^0.344.0",
