@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && node --loader ts-node/esm scripts/generateSitemap.ts && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-sitemap": "node --loader ts-node/esm scripts/generateSitemap.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@eslint/js": "^8.56.0",
     "@tailwindcss/typography": "^0.5.16",
+    "@types/node": "^22.15.24",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
@@ -39,6 +41,7 @@
     "globals": "^13.24.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.2.2",
     "typescript-eslint": "^7.0.2",
     "vite": "^6.1.1"
