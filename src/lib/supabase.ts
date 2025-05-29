@@ -1,14 +1,21 @@
 import { createClient } from '@supabase/supabase-js';
 
+// Add more descriptive debug logging
+console.log('Environment check:', {
+  hasSupabaseUrl: typeof import.meta.env.VITE_SUPABASE_URL !== 'undefined',
+  hasSupabaseKey: typeof import.meta.env.VITE_SUPABASE_ANON_KEY !== 'undefined',
+  supabaseUrlValue: import.meta.env.VITE_SUPABASE_URL,
+});
+
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Add debug logging
-console.log('Supabase URL:', supabaseUrl);
-console.log('Supabase Key exists:', !!supabaseKey);
+if (!supabaseUrl || supabaseUrl === 'undefined') {
+  throw new Error('Missing VITE_SUPABASE_URL environment variable');
+}
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Missing Supabase environment variables');
+if (!supabaseKey || supabaseKey === 'undefined') {
+  throw new Error('Missing VITE_SUPABASE_ANON_KEY environment variable');
 }
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
