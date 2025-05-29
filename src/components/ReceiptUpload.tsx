@@ -1,9 +1,10 @@
 import React from 'react';
 import { Upload, Plus, Loader2, RotateCcw, X, Maximize2 } from 'lucide-react';
 import imageCompression from 'browser-image-compression';
-import { processReceiptImage } from '../utils/makeWebhook';
-import { BillInfo } from '../types';
+import { processReceiptLocally, getSupportedLanguages } from '../utils/localOCR';
 import { Link } from 'react-router-dom';
+
+type Language = 'eng' | 'chi_sim' | 'chi_tra' | 'jpn' | 'kor' | 'tha' | 'vie' | 'fra' | 'spa' | 'deu' | 'ita';
 
 interface ReceiptUploadProps {
   onImageCapture: (file: File) => void;
@@ -21,6 +22,13 @@ const ReceiptUpload = React.forwardRef<{ resetUpload: () => void }, ReceiptUploa
     const [lastFile, setLastFile] = React.useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
     const [showFullImage, setShowFullImage] = React.useState(false);
+    const [uploadedFile, setUploadedFile] = React.useState<File | null>(null);
+    const [showLanguageSelect, setShowLanguageSelect] = React.useState(false);
+
+    const languageOptions = React.useMemo(() => {
+      const supportedLanguages = getSupportedLanguages();
+      return Object.entries(supportedLanguages) as Array<[Language, string]>;
+    }, []);
 
     React.useEffect(() => {
       return () => {
@@ -54,46 +62,50 @@ const ReceiptUpload = React.forwardRef<{ resetUpload: () => void }, ReceiptUploa
       setPreviewUrl(url);
     };
 
-    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
+    const handleFileChange = async (file: File) => {
       if (!file) return;
 
+      setUploadedFile(file);
+      createPreview(file);
+      setShowLanguageSelect(true);
+      console.log('File selected, showing language select');  // Debug log
+    };
+
+    const handleLanguageSelect = async (lang: Language) => {
+      if (!uploadedFile) return;
+
+      setShowLanguageSelect(false);
       setIsProcessing(true);
       setError(null);
       setProcessingStep('Initializing...');
 
       try {
-        // Compress the image
         const options = {
           maxSizeMB: 1,
           maxWidthOrHeight: 1024,
           useWebWorker: true
         };
-        const compressedFile = await imageCompression(file, options);
+        const compressedFile = await imageCompression(uploadedFile, options);
 
-        createPreview(compressedFile);
         onImageCapture(compressedFile);
         setLastFile(compressedFile);
 
-        // Update processing steps with delays
         setTimeout(() => setProcessingStep('Processing image...'), 1000);
         setTimeout(() => setProcessingStep('Extracting text...'), 2500);
-        setTimeout(() => setProcessingStep('Analyzing receipt...'), 4000);
 
-        const result = await processReceiptImage(compressedFile);
+        setProcessingStep('Processing with OCR...');
+        const result = await processReceiptLocally(compressedFile, [lang]);
         
         onItemsExtracted(result.items);
         onBillInfoExtracted({
           restaurantName: result.billInfo.restaurantName,
           date: result.billInfo.date ? new Date(result.billInfo.date) : null,
-          currency: result.billInfo.currency || 'USD'
+          currency: result.billInfo.currency
         });
         onAdditionalChargesExtracted(result.charges);
 
-        // Show success state
         setProcessingStep('Success!');
         
-        // Delay the completion to match the animation
         setTimeout(() => {
           setProcessingStep('');
           setIsProcessing(false);
@@ -110,9 +122,17 @@ const ReceiptUpload = React.forwardRef<{ resetUpload: () => void }, ReceiptUploa
       }
     };
 
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        handleFileChange(file);
+      }
+    };
+
     const handleRetry = async () => {
-      if (lastFile) {
-        await handleFileChange({ target: { files: [lastFile] } } as React.ChangeEvent<HTMLInputElement>);
+      if (uploadedFile) {
+        setShowLanguageSelect(true);
+        setError(null);
       }
     };
 
@@ -144,37 +164,72 @@ const ReceiptUpload = React.forwardRef<{ resetUpload: () => void }, ReceiptUploa
     return (
       <div className="card p-4 sm:p-6">
         <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:min-h-[56px]">
-            <button
-              onClick={scrollToBillForm}
-              className="btn btn-lg flex-1 flex items-center justify-center gap-2 bg-gray-900 hover:bg-black text-white border-0 text-base sm:text-lg"
-            >
-              <Plus size={20} />
-              <span>Add Items Manually</span>
-            </button>
+          {!showLanguageSelect ? (
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:min-h-[56px]">
+              <button
+                onClick={scrollToBillForm}
+                className="btn btn-lg flex-1 flex items-center justify-center gap-2 bg-gray-900 hover:bg-black text-white border-0 text-base sm:text-lg"
+              >
+                <Plus size={20} />
+                <span>Add Items Manually</span>
+              </button>
 
-            <div className="relative flex-1">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200"></div>
+              <div className="relative flex-1">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="px-2 text-sm text-gray-500 bg-white">or</span>
+                </div>
               </div>
-              <div className="relative flex justify-center">
-                <span className="px-2 text-sm text-gray-500 bg-white">or</span>
-              </div>
+
+              <button
+                onClick={handleUploadClick}
+                disabled={isProcessing}
+                className="btn btn-lg btn-primary flex-1 flex items-center justify-center gap-2 text-base sm:text-lg relative overflow-hidden"
+              >
+                {isProcessing ? (
+                  <Loader2 size={20} className="animate-spin" />
+                ) : (
+                  <Upload size={20} />
+                )}
+                <span>{isProcessing ? 'Processing...' : 'Upload Receipt'}</span>
+              </button>
             </div>
-
-            <button
-              onClick={handleUploadClick}
-              disabled={isProcessing}
-              className="btn btn-lg btn-primary flex-1 flex items-center justify-center gap-2 text-base sm:text-lg relative overflow-hidden"
-            >
-              {isProcessing ? (
-                <Loader2 size={20} className="animate-spin" />
-              ) : (
-                <Upload size={20} />
+          ) : (
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-center">Select Receipt Language</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                {languageOptions.map(([lang, name]) => (
+                  <button
+                    key={lang}
+                    onClick={() => handleLanguageSelect(lang)}
+                    className="btn btn-outline hover:bg-primary hover:text-white transition-colors p-3 text-sm"
+                  >
+                    {name}
+                  </button>
+                ))}
+              </div>
+              {uploadedFile && !isProcessing && (
+                <button
+                  onClick={() => {
+                    setShowLanguageSelect(false);
+                    setUploadedFile(null);
+                    if (previewUrl) {
+                      URL.revokeObjectURL(previewUrl);
+                      setPreviewUrl(null);
+                    }
+                    if (fileInputRef.current) {
+                      fileInputRef.current.value = '';
+                    }
+                  }}
+                  className="btn btn-ghost text-sm mx-auto block"
+                >
+                  Cancel Upload
+                </button>
               )}
-              <span>{isProcessing ? 'Processing...' : 'Upload Receipt'}</span>
-            </button>
-          </div>
+            </div>
+          )}
           
           <div className="text-center">
             <p className="text-sm text-gray-500">
@@ -209,7 +264,7 @@ const ReceiptUpload = React.forwardRef<{ resetUpload: () => void }, ReceiptUploa
           ref={fileInputRef}
           type="file"
           accept="image/*, image/heic, image/heif"
-          onChange={handleFileChange}
+          onChange={handleInputChange}
           className="hidden"
         />
 
@@ -270,16 +325,6 @@ const ReceiptUpload = React.forwardRef<{ resetUpload: () => void }, ReceiptUploa
               <X size={24} />
             </button>
             <div className="relative max-w-3xl w-full mx-auto overflow-auto max-h-[calc(100vh-2rem)]">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowFullImage(false);
-                }}
-                className="hidden"
-                aria-label="Close preview"
-              >
-                <X size={24} />
-              </button>
               <img
                 src={previewUrl}
                 alt="Receipt"
